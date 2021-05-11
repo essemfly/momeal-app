@@ -1,0 +1,67 @@
+type Brand {
+  ID: ID!
+  name: String!
+  description: String!
+  brandimageurl: String!
+  address: String
+}
+
+type Category {
+  ID: ID!
+  name: CategoryEnum!
+  categoryimageurl: String!
+}
+
+enum CategoryEnum {
+  Hamultang
+  Yukgyejang
+  Maratang
+  Duonjangzzigye
+  Kimchizzigye
+  Gambas
+  Etcjeongol
+  Steak
+  Gogi
+  Umooktang
+  Churtang
+  Bibbimbap
+  Gobchangjeongol
+  Chunggukjang
+  Budaezzigye
+  Etc
+  Altang
+  Myun
+  Millefeuille
+  Uguzytang
+  Bunsik
+  Pasta
+  Sundubuzzigye
+  Kongbeasyzzigye
+}
+
+type Product {
+  ID: ID!
+  name: String!
+  imageurl: String!
+  price: Int!
+  maker: String
+  brand: Brand
+  mallname: String!
+  mallproducturl: String!
+  deliveryfee: Int!
+  category: Category!
+}
+
+input ProductsInput {
+  offset: Int!
+  limit: Int!
+  category: CategoryEnum
+  brand: ID
+}
+
+type Query {
+  products(filter: ProductsInput!): [Product!]!
+  categories: [Category!]!
+  brands: [Brand!]!
+}
+

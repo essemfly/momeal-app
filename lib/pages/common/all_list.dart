@@ -4,6 +4,7 @@ import 'package:momeal_app/controllers/category.dart';
 import 'package:momeal_app/helpers/aspect.dart';
 import 'package:momeal_app/models/brand.dart';
 import 'package:momeal_app/models/category.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 const double ICON_SIZE = 40;
 
@@ -27,23 +28,29 @@ class Item extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.only(left: 20, right: 5),
             child: Container(
               height: ICON_SIZE,
               width: ICON_SIZE,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(listItem.thumbnail),
+                  image: CachedNetworkImageProvider(listItem.thumbnail),
                   fit: BoxFit.cover,
                 ),
-                borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
               ),
             ),
           ),
-          Text(
-            listItem.label,
-            style: const TextStyle(fontSize: 17),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                listItem.label,
+                style: const TextStyle(fontSize: 15),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
         ],
       ),

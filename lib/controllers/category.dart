@@ -23,10 +23,7 @@ class CategoryController extends GetxController {
 
   @override
   void onInit() async {
-    _categories.assignAll(await _categoryRepo.list());
-    _selectedCategory.listen((Category? category) {
-      print(category == null ? 'Null' : category.name);
-    });
+    _categories.bindStream(_categoryRepo.listAll());
     super.onInit();
   }
 }

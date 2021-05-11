@@ -5,11 +5,17 @@ import 'package:momeal_app/controllers/home.dart';
 import 'package:momeal_app/pages/brand/brand.dart';
 import 'package:momeal_app/pages/home/home.dart';
 import 'package:momeal_app/pages/menu/menu.dart';
+import 'package:gql_http_link/gql_http_link.dart';
+import 'package:ferry/ferry.dart';
 
 import 'controllers/brand.dart';
 import 'controllers/category.dart';
 
-void main() {
+void main() async {
+  final graphqlLink = HttpLink(
+      'http://ec2-15-164-166-129.ap-northeast-2.compute.amazonaws.com:8080/query');
+  Get.put(Client(link: graphqlLink));
+
   Get.put(HomeController());
   Get.put(CategoryController());
   Get.put(BrandController());

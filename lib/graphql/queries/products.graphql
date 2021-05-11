@@ -1,0 +1,11 @@
+query Products($filter: ProductsInput!) {
+  products(filter: $filter) {
+    ID
+    name
+    imageurl
+    price
+    brand {
+      name
+    }
+  }
+}

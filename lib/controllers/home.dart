@@ -18,8 +18,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
-    _categories.assignAll((await _categoryRepo.list()).take(15));
-    _brands.assignAll((await _brandRepo.list()).take(3));
+    _categories
+        .bindStream(_categoryRepo.listAll().map((c) => c.take(15).toList()));
+    _brands.bindStream(_brandRepo.listAll().map((b) => b.take(3).toList()));
     super.onInit();
   }
 }

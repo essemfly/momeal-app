@@ -1,25 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 const double ICON_SIZE = 50;
 
 class HomeIcon extends StatelessWidget {
   final String name;
-  final String thumbnail;
-  final bool isCircular;
+  final ImageProvider image;
   final void Function() onTap;
 
-  HomeIcon(this.name, this.thumbnail, this.isCircular, this.onTap);
+  HomeIcon(this.name, this.image, this.onTap);
 
-  static HomeIcon rounded(
-          String name, String thumbnail, void Function() onTap) =>
-      HomeIcon(name, thumbnail, false, onTap);
-
-  static HomeIcon circular(
-          String name, String thumbnail, void Function() onTap) =>
-      HomeIcon(name, thumbnail, true, onTap);
+  static HomeIcon item(String name, String thumbnail, void Function() onTap) =>
+      HomeIcon(name, CachedNetworkImageProvider(thumbnail), onTap);
 
   static HomeIcon more(void Function() onTap) =>
-      HomeIcon('더보기', 'assets/more.png', true, onTap);
+      HomeIcon('더보기', AssetImage('assets/more.png'), onTap);
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +27,9 @@ class HomeIcon extends StatelessWidget {
             width: ICON_SIZE,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(thumbnail),
+                image: image,
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.circular(isCircular ? 10000 : 10),
               color: Colors.white,
             ),
           ),

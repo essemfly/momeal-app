@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:momeal_app/helpers/aspect.dart';
 import 'package:momeal_app/models/brand.dart';
@@ -15,6 +17,7 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(product.thumbnail);
     return InkWell(
       onTap: () {
         // Get.to(() => ProductWebView(product));
@@ -31,8 +34,9 @@ class ProductListItem extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
+                color: Colors.grey.shade100,
                 image: DecorationImage(
-                  image: AssetImage(product.thumbnail),
+                  image: CachedNetworkImageProvider(product.thumbnail),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -56,20 +60,19 @@ class ProductListItem extends StatelessWidget {
 }
 
 class ProductListPage extends StatelessWidget {
-  final ProductRepo _repo = ProductRepo();
   final String title;
   final void Function() onBackTap;
+  final ProductRepo _repo = ProductRepo();
+
   final RxList<Product> _products = RxList.empty();
+  List<Product> get products => _products.toList();
 
   ProductListPage(
       {required this.title,
       required this.onBackTap,
       Category? category,
       Brand? brand}) {
-    _repo.list(category: category, brand: brand).then((products) {
-      print(products);
-      _products.assignAll(products);
-    });
+    _products.bindStream(_repo.listAll());
   }
 
   @override
@@ -83,7 +86,7 @@ class ProductListPage extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             crossAxisCount: 2,
-            children: _products
+            children: products
                 .map((p) => Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),

@@ -31,8 +31,14 @@ dependencies:
   intl: ^0.17.0
   # webview_flutter: ^2.0.4
   url_launcher: ^6.0.3
+  plugin_platform_interface: ^2.0.0
+  ferry: ^0.10.1-0.1.nullsafety.0
+  gql_http_link: ^0.4.0-nullsafety.1
+  cached_network_image: ^3.0.0
 
 dev_dependencies:
+  ferry_generator: ^0.4.1-0.1.nullsafety.0
+  build_runner: ^1.12.2
   flutter_test:
     sdk: flutter
 

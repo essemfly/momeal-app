@@ -7,7 +7,7 @@ import 'package:momeal_app/controllers/home.dart';
 import 'package:momeal_app/pages/home/components/icon.dart';
 import 'package:momeal_app/pages/home/components/notice.dart';
 
-const LOGO_PATH = 'assets/bi.png';
+const LOGO_PATH = 'assets/momeal_logo.png';
 
 const SECTION_TITLE_MENU = '메뉴 모두모아';
 const SECTION_TITLE_BRAND = '브랜드 모두모아';
@@ -36,7 +36,7 @@ class HomePage extends GetView<HomeController> {
   List<HomeIcon> get categoryIcons {
     List<HomeIcon> icons = [];
     icons.addAll(controller.categories
-        .map((e) => HomeIcon.rounded(e.name, e.thumbnail, () {
+        .map((e) => HomeIcon.item(e.name, e.thumbnail, () {
               final controller = CategoryController.to();
               controller.selectMenu(e);
               _navigateToIndex(1);
@@ -53,7 +53,7 @@ class HomePage extends GetView<HomeController> {
   List<HomeIcon> get brandIcons {
     List<HomeIcon> icons = [];
     icons.addAll(controller.brands
-        .map((e) => HomeIcon.circular(e.name, e.thumbnail, () {
+        .map((e) => HomeIcon.item(e.name, e.thumbnail, () {
               final controller = BrandController.to();
               controller.selectBrand(e);
               _navigateToIndex(2);

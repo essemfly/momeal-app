@@ -23,10 +23,7 @@ class BrandController extends GetxController {
 
   @override
   void onInit() async {
-    _brands.assignAll(await _repo.list());
-    _selectedBrand.listen((Brand? brand) {
-      print(brand == null ? 'Null' : brand.name);
-    });
+    _brands.bindStream(_repo.listAll());
     super.onInit();
   }
 }
