@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:momeal_app/models/product.dart';
+import 'package:momeal_app/pages/common/page_with_topnav.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class ProductWebView extends StatelessWidget {
+  final Product product;
+  ProductWebView(this.product);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageWithTopNav(
+        scrollable: false,
+        title: '상품 상세',
+        child: WebView(
+          initialUrl: product.url,
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
+        onBackTap: () {
+          Get.back();
+        },
+      ),
+    );
+  }
+}
