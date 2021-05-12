@@ -29,10 +29,45 @@ void main() async {
 
   Get.put(CategoryController(CategoryRepo()));
   Get.put(BrandController(BrandRepo()));
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+Future<bool> _exitApp(BuildContext context) async {
+  return await showDialog<bool?>(
+        context: context,
+        builder: (b) => AlertDialog(
+          title: Text('앱 종료'),
+          content: Text('정말 종료하시겠어요...? :('),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('아니오'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: new Text('예'),
+            ),
+          ],
+        ),
+      ) ??
+      false;
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: '모밀',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      home: AppHome(),
+    );
+  }
+}
+
+class AppHome extends StatelessWidget {
   final RxInt _navIndex = 0.obs;
   int get navIndex => _navIndex.value;
   final RxBool _isReady = false.obs;
@@ -40,6 +75,24 @@ class MyApp extends StatelessWidget {
 
   final CategoryController _categoryController = CategoryController.to();
   final BrandController _brandController = BrandController.to();
+
+  Future<bool> _onWillPop(BuildContext context) async {
+    switch (_navIndex.value) {
+      // Category
+      case 1:
+        _navIndex.value = _categoryController.isSelected ? 1 : 0;
+        _categoryController.unselect();
+        return false;
+      // Brand
+      case 2:
+        _navIndex.value = _brandController.isSelected ? 1 : 0;
+        _brandController.unselect();
+        return false;
+      // Home & others
+      default:
+        return await _exitApp(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +110,9 @@ class MyApp extends StatelessWidget {
       BrandPage(backToHome: () => _navIndex.value = 0)
     ];
 
-    return GetMaterialApp(
-      title: '모밀',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: Obx(() => !isReady
+    return WillPopScope(
+      onWillPop: () => _onWillPop(context),
+      child: Obx(() => !isReady
           ? const LoadingPage()
           : Scaffold(
               appBar: null,

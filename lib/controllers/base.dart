@@ -15,6 +15,7 @@ abstract class BaseController<T, R extends GraphQLRepo<T, dynamic>>
   final Rx<T?> _selected = Rx(null);
   Stream<T?> get selectedStream => _selected.stream;
   T? get selected => _selected.value;
+  bool get isSelected => _selected.value != null;
 
   void select(T item) {
     _selected.value = item;

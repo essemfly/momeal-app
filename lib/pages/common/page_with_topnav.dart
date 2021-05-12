@@ -25,26 +25,16 @@ class PageWithTopNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // https://stackoverflow.com/questions/50452710/catch-android-back-button-event-on-flutter
-        if (onBackTap != null) {
-          onBackTap!();
-        }
-
-        return onBackTap == null;
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TopBar(
-            title: title,
-            onBackTap: hideBackButton ? null : onBackTap,
-          ),
-          Expanded(
-              child: scrollable ? SingleChildScrollView(child: child) : child),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TopBar(
+          title: title,
+          onBackTap: hideBackButton ? null : onBackTap,
+        ),
+        Expanded(
+            child: scrollable ? SingleChildScrollView(child: child) : child),
+      ],
     );
   }
 }

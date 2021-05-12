@@ -25,7 +25,7 @@ class CategoryPage extends StatelessWidget {
                   Category(name: "", thumbnail: "", label: ""),
             ),
           ],
-          index: controller.selected == null ? 0 : 1,
+          index: controller.isSelected ? 1 : 0,
         ));
   }
 }

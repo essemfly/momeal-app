@@ -24,7 +24,7 @@ class BrandPage extends StatelessWidget {
               brand: controller.selected ?? Brand(name: "", thumbnail: ""),
             ),
           ],
-          index: controller.selected == null ? 0 : 1,
+          index: controller.isSelected ? 1 : 0,
         ));
   }
 }
