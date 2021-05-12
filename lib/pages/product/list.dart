@@ -4,28 +4,49 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:momeal_app/helpers/aspect.dart';
+import 'package:momeal_app/helpers/dialog.dart';
 import 'package:momeal_app/models/brand.dart';
 import 'package:momeal_app/models/category.dart';
 import 'package:momeal_app/models/product.dart';
 import 'package:momeal_app/pages/common/page_with_topnav.dart';
 import 'package:momeal_app/repos/product.dart';
+import 'package:momeal_app/services/analytics.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+String _getAlternateUrl(Product p) =>
+    Uri.encodeFull("https://search.naver.com/search.naver?query=${p.name}");
 
 class ProductListItem extends StatelessWidget {
   final Product product;
-  ProductListItem(this.product);
+  final AnalyticsService analytics;
+  ProductListItem(this.product, {required this.analytics});
 
   @override
   Widget build(BuildContext context) {
-    print(product.thumbnail);
     return InkWell(
-      onTap: () {
-        // Get.to(() => ProductWebView(product));
-        canLaunch(product.url).then((result) {
-          result
-              ? launch(product.url)
-              : throw 'Could not launch ${product.url}';
-        });
+      onTap: () async {
+        analytics.logIconClicked(ClickableButtonType.PRODUCT, PageType.PRODUCTS,
+            payload: {
+              "id": product.id,
+              "name": product.name,
+              "url": product.url,
+              "brandName": product.brand.name,
+              "category": product.category.name,
+              "price": product.price,
+            });
+
+        if (await canLaunch(product.url)) {
+          launch(product.url);
+          return;
+        }
+
+        final alternateUrl = _getAlternateUrl(product);
+        if (await canLaunch(alternateUrl)) {
+          launch(alternateUrl);
+          return;
+        }
+
+        showAlertDialog(context, "오류", "상품 정보에 오류가 있습니다.");
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -63,7 +84,7 @@ class ProductListPage extends StatelessWidget {
   final String title;
   final void Function() onBackTap;
   final ProductRepo _repo = ProductRepo();
-
+  final _analytics = AnalyticsService.to();
   final RxList<Product> _products = RxList.empty();
   List<Product> get products => _products.toList();
 
@@ -90,7 +111,7 @@ class ProductListPage extends StatelessWidget {
                 .map((p) => Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
-                      child: ProductListItem(p),
+                      child: ProductListItem(p, analytics: _analytics),
                     ))
                 .toList(),
           )),

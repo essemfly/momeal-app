@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:momeal_app/controllers/base.dart';
 import 'package:momeal_app/controllers/brand.dart';
 import 'package:momeal_app/controllers/category.dart';
 import 'package:momeal_app/controllers/home.dart';
+import 'package:momeal_app/helpers/controllers.dart';
+import 'package:momeal_app/models/base.dart';
+import 'package:momeal_app/models/brand.dart';
+import 'package:momeal_app/models/category.dart';
 import 'package:momeal_app/pages/home/components/icon.dart';
 import 'package:momeal_app/pages/home/components/notice.dart';
+import 'package:momeal_app/services/analytics.dart';
 
 const LOGO_PATH = 'assets/momeal_logo.png';
 
@@ -28,44 +34,58 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
+ClickableButtonType _getIconTypeEnum<T>(bool isMore) {
+  if (T == Brand) {
+    return isMore ? ClickableButtonType.BRAND_MORE : ClickableButtonType.BRAND;
+  } else {
+    return isMore
+        ? ClickableButtonType.CATEGORY_MORE
+        : ClickableButtonType.CATEGORY;
+  }
+}
+
+int _getNavIndex<T>() {
+  if (T == Brand) {
+    return 2;
+  } else {
+    return 1;
+  }
+}
+
 class HomePage extends GetView<HomeController> {
   final void Function(int index) _navigateToIndex;
-
+  final _analytics = AnalyticsService.to();
   HomePage(this._navigateToIndex);
 
-  List<HomeIcon> get categoryIcons {
+  VoidCallback _iconHandlerFactory<T extends Displayable>(
+      {T? item, bool isMore = false}) {
+    ClickableButtonType iconClickType = _getIconTypeEnum<T>(isMore);
+    return () {
+      _analytics.logIconClicked(iconClickType, PageType.HOME,
+          payload: {"name": item?.displayName});
+      final BaseController controller = getController<T>();
+      isMore ? controller.unselect() : controller.select(item!);
+      _navigateToIndex(_getNavIndex<T>());
+    };
+  }
+
+  List<HomeIcon>
+      _iconFactory<T extends Displayable, C extends BaseController<T, dynamic>>(
+          List<T> items) {
     List<HomeIcon> icons = [];
-    icons.addAll(controller.categories
-        .map((e) => HomeIcon.item(e.name, e.thumbnail, () {
-              final controller = CategoryController.to();
-              controller.selectMenu(e);
-              _navigateToIndex(1);
-            }))
+    icons.addAll(items
+        .map((e) => HomeIcon.item(
+            e.displayName, e.thumbnail, _iconHandlerFactory<T>(item: e)))
         .toList());
-    icons.add(HomeIcon.more(() {
-      final controller = CategoryController.to();
-      controller.unselectMenu();
-      _navigateToIndex(1);
-    }));
+    icons.add(HomeIcon.more(_iconHandlerFactory<T>(isMore: true)));
     return icons;
   }
 
-  List<HomeIcon> get brandIcons {
-    List<HomeIcon> icons = [];
-    icons.addAll(controller.brands
-        .map((e) => HomeIcon.item(e.name, e.thumbnail, () {
-              final controller = BrandController.to();
-              controller.selectBrand(e);
-              _navigateToIndex(2);
-            }))
-        .toList());
-    icons.add(HomeIcon.more(() {
-      final controller = BrandController.to();
-      controller.unselectBrand();
-      _navigateToIndex(2);
-    }));
-    return icons;
-  }
+  List<HomeIcon> get categoryIcons =>
+      _iconFactory<Category, CategoryController>(controller.categories);
+
+  List<HomeIcon> get brandIcons =>
+      _iconFactory<Brand, BrandController>(controller.brands);
 
   @override
   Widget build(BuildContext context) {

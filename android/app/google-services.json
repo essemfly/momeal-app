@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "87507404677",
+    "project_id": "momeal-app",
+    "storage_bucket": "momeal-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87507404677:android:f0c33c44715d3e81bae6ec",
+        "android_client_info": {
+          "package_name": "co.momeal.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87507404677-2igfdiftnsstb88oiqqo6r9jib5t6vpb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLbYaNTk19bqqEcrJrLG1ImiJLlQiVchs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87507404677-2igfdiftnsstb88oiqqo6r9jib5t6vpb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

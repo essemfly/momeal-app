@@ -1,21 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:momeal_app/controllers/brand.dart';
-import 'package:momeal_app/controllers/category.dart';
-import 'package:momeal_app/helpers/aspect.dart';
-import 'package:momeal_app/models/brand.dart';
-import 'package:momeal_app/models/category.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:momeal_app/controllers/base.dart';
+import 'package:momeal_app/helpers/aspect.dart';
+import 'package:momeal_app/helpers/controllers.dart';
+import 'package:momeal_app/models/base.dart';
+import 'package:momeal_app/models/brand.dart';
+import 'package:momeal_app/services/analytics.dart';
 
 const double ICON_SIZE = 40;
 
-class ListItem {
-  final String thumbnail;
-  final String label;
-
-  ListItem({required this.thumbnail, required this.label});
-}
-
-class Item extends StatelessWidget {
+class Item<ListItem extends Displayable> extends StatelessWidget {
   final ListItem listItem;
   final void Function() onTap;
   Item({required this.listItem, required this.onTap});
@@ -57,7 +51,7 @@ class Item extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                listItem.label,
+                listItem.displayName,
                 style: const TextStyle(fontSize: 15),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -70,30 +64,26 @@ class Item extends StatelessWidget {
   }
 }
 
-class AllList extends StatelessWidget {
-  final List<Item> items;
+_getPageType<T extends Displayable>() =>
+    T == Brand ? PageType.BRANDS : PageType.CATEGORIES;
+_getButtonType<T extends Displayable>() =>
+    T == Brand ? ClickableButtonType.BRAND : ClickableButtonType.CATEGORY;
 
+class AllList<T extends Displayable> extends StatelessWidget {
+  final List<Item> items;
   AllList(this.items);
 
-  static menus(List<Category> categories) {
-    CategoryController controller = CategoryController.to();
+  static make<R extends Displayable>(List<R> items) {
+    BaseController controller = getController<R>();
+    final AnalyticsService _analytics = AnalyticsService.to();
 
-    return AllList(categories
-        .map((menu) => Item(
-            listItem: ListItem(thumbnail: menu.thumbnail, label: menu.name),
+    return AllList(items
+        .map((item) => Item(
+            listItem: item,
             onTap: () {
-              controller.selectMenu(menu);
-            }))
-        .toList());
-  }
-
-  static brands(List<Brand> brands) {
-    BrandController controller = BrandController.to();
-    return AllList(brands
-        .map((brand) => Item(
-            listItem: ListItem(thumbnail: brand.thumbnail, label: brand.name),
-            onTap: () {
-              controller.selectBrand(brand);
+              _analytics.logIconClicked(_getButtonType<R>(), _getPageType<R>(),
+                  payload: {"name": item.displayName});
+              controller.select(item);
             }))
         .toList());
   }

@@ -7,18 +7,25 @@ import 'package:momeal_app/pages/home/home.dart';
 import 'package:momeal_app/pages/menu/menu.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry/ferry.dart';
+import 'package:momeal_app/repos/brand.dart';
+import 'package:momeal_app/repos/category.dart';
+import 'package:momeal_app/services/analytics.dart';
 
 import 'controllers/brand.dart';
 import 'controllers/category.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final graphqlLink = HttpLink(
       'http://ec2-15-164-166-129.ap-northeast-2.compute.amazonaws.com:8080/query');
   Get.put(Client(link: graphqlLink));
 
+  Get.put(AnalyticsService(FirebaseAnalytics()));
+
   Get.put(HomeController());
-  Get.put(CategoryController());
-  Get.put(BrandController());
+  Get.put(CategoryController(CategoryRepo()));
+  Get.put(BrandController(BrandRepo()));
   runApp(MyApp());
 }
 
@@ -71,8 +78,8 @@ class _MyAppState extends State<MyApp> {
           iconSize: 28,
           currentIndex: _navIndex,
           onTap: (int newIndex) {
-            _categoryController.unselectMenu();
-            _brandController.unselectBrand();
+            _categoryController.unselect();
+            _brandController.unselect();
             setState(() {
               _navIndex = newIndex;
             });

@@ -8,6 +8,7 @@ type Brand {
 
 type Category {
   ID: ID!
+  label: String!
   name: CategoryEnum!
   categoryimageurl: String!
 }
@@ -48,7 +49,7 @@ type Product {
   brand: Brand
   mallname: String!
   mallproducturl: String!
-  deliveryfee: Int!
+  deliveryfee: String!
   category: Category!
 }
 
