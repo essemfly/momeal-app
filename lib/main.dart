@@ -4,7 +4,7 @@ import 'package:get/route_manager.dart';
 import 'package:momeal_app/pages/brand/brand.dart';
 import 'package:momeal_app/pages/home/home.dart';
 import 'package:momeal_app/pages/loading/loading.dart';
-import 'package:momeal_app/pages/menu/menu.dart';
+import 'package:momeal_app/pages/category/category.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry/ferry.dart';
 import 'package:momeal_app/repos/brand.dart';
@@ -43,8 +43,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final readyStream = _categoryController.stream.combineLatest(
-        _brandController.stream, (List<Category>? c, List<Brand>? b) {
+    final readyStream = _categoryController.itemsStream.combineLatest(
+        _brandController.itemsStream, (List<Category>? c, List<Brand>? b) {
       if (c == null || b == null) return false;
       return c.length > 0 && b.length > 0;
     });
@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
           _navIndex = index;
         });
       }),
-      MenuPage(
+      CategoryPage(
         backToHome: () {
           setState(() {
             _navIndex = 0;
@@ -87,7 +87,10 @@ class _MyAppState extends State<MyApp> {
           ? LoadingPage()
           : Scaffold(
               appBar: null,
-              body: _pages[_navIndex],
+              body: IndexedStack(
+                children: _pages,
+                index: _navIndex,
+              ),
               bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Colors.black,
                 unselectedItemColor: Colors.grey.shade500,

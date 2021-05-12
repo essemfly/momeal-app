@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:momeal_app/controllers/brand.dart';
-import 'package:momeal_app/models/brand.dart';
+import 'package:get/get.dart';
+import 'package:momeal_app/controllers/category.dart';
+import 'package:momeal_app/models/category.dart';
 import 'package:momeal_app/pages/common/all_list.dart';
 import 'package:momeal_app/pages/common/all_page.dart';
 import 'package:momeal_app/pages/product/list.dart';
 
-class BrandPage extends StatefulWidget {
+class CategoryPage extends StatefulWidget {
   final void Function() backToHome;
-  final controller = BrandController.to();
-  BrandPage({required this.backToHome});
+  final controller = CategoryController.to();
+
+  CategoryPage({required this.backToHome});
 
   @override
-  _BrandPageState createState() => _BrandPageState();
+  _CategoryPageState createState() => _CategoryPageState();
 }
 
-class _BrandPageState extends State<BrandPage> {
+class _CategoryPageState extends State<CategoryPage> {
   int _inPageNavIndex = 0;
   @override
   void initState() {
-    widget.controller.selectedStream.listen((Brand? b) {
+    widget.controller.selectedStream.listen((Category? c) {
       setState(() {
-        _inPageNavIndex = b == null ? 0 : 1;
+        _inPageNavIndex = c == null ? 0 : 1;
       });
     });
     super.initState();
@@ -31,13 +32,13 @@ class _BrandPageState extends State<BrandPage> {
   Widget build(BuildContext context) {
     return IndexedStack(
       children: [
-        AllPage('모든 밀키트 브랜드', AllList.make<Brand>(widget.controller.items),
+        AllPage('모든 밀키트 메뉴', AllList.make<Category>(widget.controller.items),
             widget.backToHome),
         Obx(() => ProductListPage(
               title: widget.controller.selected?.displayName ?? "",
               onBackTap: widget.controller.unselect,
-              brand:
-                  widget.controller.selected ?? Brand(name: "", thumbnail: ""),
+              category: widget.controller.selected ??
+                  Category(name: "", thumbnail: "", label: ""),
             )),
       ],
       index: _inPageNavIndex,

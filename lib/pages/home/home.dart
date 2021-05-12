@@ -97,8 +97,8 @@ class HomePage extends StatelessWidget {
         children: [
           Container(
             margin: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 10,
-              bottom: 20,
+              top: MediaQuery.of(context).padding.top + 20,
+              bottom: 25,
             ),
             child: Image.asset(
               AssetImages.bi,
