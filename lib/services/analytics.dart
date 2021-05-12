@@ -1,7 +1,5 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:get/instance_manager.dart';
 import 'package:amplitude_flutter/amplitude.dart';
-import 'package:amplitude_flutter/identify.dart';
+import 'package:get/instance_manager.dart';
 
 enum ClickableButtonType {
   CATEGORY,
@@ -22,15 +20,13 @@ const _amplitudeApiKey = "a7e164ed304fdbefc414b62863dfe32c";
 const _isDev = true;
 
 class AnalyticsService {
-  final FirebaseAnalytics _analytics;
   final Amplitude _amplitude = Amplitude.getInstance();
 
   static AnalyticsService to() => Get.find();
 
-  AnalyticsService(this._analytics) {
+  AnalyticsService() {
     _amplitude.init(_amplitudeApiKey);
 
-    _analytics.logAppOpen();
     _amplitude.logEvent("${_isDev ? 'dev_' : ''}APP_OPENED");
     _printAction("${_isDev ? 'dev_' : ''}APP_OPENED");
   }
@@ -52,10 +48,6 @@ class AnalyticsService {
     Map<String, dynamic> finalPayload = payload ?? {};
     finalPayload["buttonType"] = buttonType.toString().split(".").last;
     _printAction(actionName, payload: finalPayload);
-    _analytics.logEvent(
-      name: actionName,
-      parameters: finalPayload,
-    );
     _amplitude.logEvent(actionName, eventProperties: finalPayload);
   }
 }

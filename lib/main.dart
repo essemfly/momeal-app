@@ -13,7 +13,6 @@ import 'package:momeal_app/services/analytics.dart';
 
 import 'controllers/brand.dart';
 import 'controllers/category.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,7 @@ void main() async {
       'http://ec2-15-164-166-129.ap-northeast-2.compute.amazonaws.com:8080/query');
   Get.put(Client(link: graphqlLink));
 
-  Get.put(AnalyticsService(FirebaseAnalytics()));
+  Get.put(AnalyticsService());
 
   Get.put(HomeController());
   Get.put(CategoryController(CategoryRepo()));
