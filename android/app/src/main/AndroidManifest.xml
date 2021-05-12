@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.momeal_app">
    <application
-        android:label="momeal_app"
+        android:label="모밀"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         >
