@@ -15,5 +15,7 @@ class CategoryRepo extends GraphQLRepo<Category, GCategoriesData_categories> {
   Category parseData(GCategoriesData_categories data) => Category(
       name: data.name.toString(),
       label: data.label,
-      thumbnail: data.categoryimageurl);
+      thumbnail: data.categoryimageurl != ""
+          ? data.categoryimageurl
+          : "https://mealkit.s3.ap-northeast-2.amazonaws.com/brands/momil.png");
 }

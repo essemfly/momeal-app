@@ -1,5 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get/instance_manager.dart';
+import 'package:amplitude_flutter/amplitude.dart';
+import 'package:amplitude_flutter/identify.dart';
 
 enum ClickableButtonType {
   CATEGORY,
@@ -16,13 +18,21 @@ enum PageType {
   PRODUCTS,
 }
 
+const _amplitudeApiKey = "a7e164ed304fdbefc414b62863dfe32c";
+const _isDev = true;
+
 class AnalyticsService {
   final FirebaseAnalytics _analytics;
+  final Amplitude _amplitude = Amplitude.getInstance();
+
   static AnalyticsService to() => Get.find();
 
   AnalyticsService(this._analytics) {
+    _amplitude.init(_amplitudeApiKey);
+
     _analytics.logAppOpen();
-    _printAction("APP_OPENED");
+    _amplitude.logEvent("${_isDev ? 'dev_' : ''}APP_OPENED");
+    _printAction("${_isDev ? 'dev_' : ''}APP_OPENED");
   }
 
   _printAction(String actionName, {dynamic? payload}) {
@@ -34,7 +44,7 @@ class AnalyticsService {
   _getScreenName(PageType screenType) => screenType.toString().split('.').last;
 
   _getActionName(PageType screenType, String actionName) =>
-      "dev_${actionName}_${_getScreenName(screenType)}";
+      "${_isDev ? 'dev_' : ''}${actionName}_${_getScreenName(screenType)}";
 
   logIconClicked(ClickableButtonType buttonType, PageType pageType,
       {Map<String, dynamic>? payload}) {
@@ -46,5 +56,6 @@ class AnalyticsService {
       name: actionName,
       parameters: finalPayload,
     );
+    _amplitude.logEvent(actionName, eventProperties: finalPayload);
   }
 }

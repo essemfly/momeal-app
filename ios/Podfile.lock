@@ -1,4 +1,8 @@
 PODS:
+  - Amplitude (7.2.0)
+  - amplitude_flutter (0.0.1):
+    - Amplitude (= 7.2.0)
+    - Flutter
   - Firebase/Analytics (7.11.0):
     - Firebase/Core
   - Firebase/Core (7.11.0):
@@ -102,6 +106,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
@@ -111,6 +116,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplitude
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -124,6 +130,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  amplitude_flutter:
+    :path: ".symlinks/plugins/amplitude_flutter/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -138,6 +146,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
+  Amplitude: c948c6f99c7f798c196523b2a5584367401d910f
+  amplitude_flutter: 5c934cf8331619b62bbd5a69f3cfea9090b3ca94
   Firebase: c121feb35e4126c0b355e3313fa9b487d47319fd
   firebase_analytics: 2d95c809fde5c606276a51b9cdc591a7ba44e1f2
   firebase_core: 54856a8a39b8f3e35f34fdd3373f3b92a1daa68b
