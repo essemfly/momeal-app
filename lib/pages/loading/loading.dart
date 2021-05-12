@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:momeal_app/constants.dart';
 
 class LoadingPage extends StatelessWidget {
+  const LoadingPage();
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:momeal_app/pages/brand/brand.dart';
@@ -30,16 +32,14 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+class MyApp extends StatelessWidget {
+  final RxInt _navIndex = 0.obs;
+  int get navIndex => _navIndex.value;
+  final RxBool _isReady = false.obs;
+  bool get isReady => _isReady.value;
 
-class _MyAppState extends State<MyApp> {
-  int _navIndex = 0;
-  bool _isReady = false;
-  CategoryController _categoryController = CategoryController.to();
-  BrandController _brandController = BrandController.to();
+  final CategoryController _categoryController = CategoryController.to();
+  final BrandController _brandController = BrandController.to();
 
   @override
   Widget build(BuildContext context) {
@@ -49,32 +49,12 @@ class _MyAppState extends State<MyApp> {
       return c.length > 0 && b.length > 0;
     });
 
-    readyStream.listen((isReady) {
-      setState(() {
-        _isReady = isReady;
-      });
-    });
+    _isReady.bindStream(readyStream);
 
     List<Widget> _pages = [
-      HomePage((int index) {
-        setState(() {
-          _navIndex = index;
-        });
-      }),
-      CategoryPage(
-        backToHome: () {
-          setState(() {
-            _navIndex = 0;
-          });
-        },
-      ),
-      BrandPage(
-        backToHome: () {
-          setState(() {
-            _navIndex = 0;
-          });
-        },
-      )
+      HomePage((int index) => _navIndex.value = index),
+      CategoryPage(backToHome: () => _navIndex.value = 0),
+      BrandPage(backToHome: () => _navIndex.value = 0)
     ];
 
     return GetMaterialApp(
@@ -83,35 +63,34 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: !_isReady
-          ? LoadingPage()
+      home: Obx(() => !isReady
+          ? const LoadingPage()
           : Scaffold(
               appBar: null,
               body: IndexedStack(
                 children: _pages,
-                index: _navIndex,
+                index: navIndex,
               ),
               bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Colors.black,
                 unselectedItemColor: Colors.grey.shade500,
                 iconSize: 28,
-                currentIndex: _navIndex,
+                currentIndex: navIndex,
                 onTap: (int newIndex) {
                   _categoryController.unselect();
                   _brandController.unselect();
-                  setState(() {
-                    _navIndex = newIndex;
-                  });
+                  _navIndex.value = newIndex;
                 },
                 items: [
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined), label: '홈'),
-                  BottomNavigationBarItem(icon: Icon(Icons.menu), label: '메뉴'),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.menu), label: '메뉴'),
+                  const BottomNavigationBarItem(
                       icon: Icon(Icons.card_giftcard), label: '브랜드'),
                 ],
               ),
-            ),
+            )),
     );
   }
 }
