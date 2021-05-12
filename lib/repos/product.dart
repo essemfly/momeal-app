@@ -22,8 +22,8 @@ class ProductRepo extends GraphQLRepo<Product, GProductsData_products> {
       id: data.ID,
       name: data.name,
       thumbnail: data.imageurl,
-      brand: Brand(name: data.brand?.name ?? "gg", thumbnail: ""),
-      category: Category(name: "name", thumbnail: "thumbnail"),
+      brand: Brand(name: data.brand?.name ?? "밀키트", thumbnail: ""),
+      category: Category(name: "", thumbnail: ""),
       price: data.price.toDouble(),
-      url: "");
+      url: data.mallproducturl);
 }

@@ -29,16 +29,28 @@ class Item extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 5),
-            child: Container(
-              height: ICON_SIZE,
-              width: ICON_SIZE,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(listItem.thumbnail),
-                  fit: BoxFit.cover,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: ICON_SIZE - 5,
+                  width: ICON_SIZE - 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(1000),
+                  ),
                 ),
-                color: Colors.white,
-              ),
+                Container(
+                  height: ICON_SIZE,
+                  width: ICON_SIZE,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(listItem.thumbnail),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
