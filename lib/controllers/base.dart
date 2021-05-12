@@ -8,7 +8,8 @@ abstract class BaseController<T, R extends GraphQLRepo<T, dynamic>>
 
   BaseController(this._repo);
 
-  final _items = <T>[].obs;
+  final RxList<T> _items = <T>[].obs;
+  Stream<List<T>?> get stream => _items.stream;
   List<T> get items => _items.toList();
 
   final Rx<T?> _selected = Rx(null);

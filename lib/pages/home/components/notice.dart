@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:momeal_app/constants.dart';
 
 class HomeNotice extends StatelessWidget {
+  final int brandsCount;
+  HomeNotice(this.brandsCount);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +19,7 @@ class HomeNotice extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  '56개 브랜드의 밀키트를',
+                  '$brandsCount개 브랜드의 밀키트를',
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
@@ -36,7 +39,7 @@ class HomeNotice extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
             ),
             Padding(padding: const EdgeInsets.all(20)),
-            Expanded(child: Image.asset('assets/notice.png'))
+            Expanded(child: Image.asset(AssetImages.notice))
           ],
         ),
       ),

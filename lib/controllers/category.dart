@@ -7,4 +7,6 @@ class CategoryController extends BaseController<Category, CategoryRepo> {
   static CategoryController to() => Get.find();
 
   CategoryController(CategoryRepo repo) : super(repo);
+
+  get homeItems => items.take(15).toList();
 }

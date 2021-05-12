@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:momeal_app/constants.dart';
 import 'package:momeal_app/controllers/base.dart';
 import 'package:momeal_app/controllers/brand.dart';
 import 'package:momeal_app/controllers/category.dart';
-import 'package:momeal_app/controllers/home.dart';
 import 'package:momeal_app/helpers/controllers.dart';
 import 'package:momeal_app/models/base.dart';
 import 'package:momeal_app/models/brand.dart';
@@ -12,8 +12,6 @@ import 'package:momeal_app/models/category.dart';
 import 'package:momeal_app/pages/home/components/icon.dart';
 import 'package:momeal_app/pages/home/components/notice.dart';
 import 'package:momeal_app/services/analytics.dart';
-
-const LOGO_PATH = 'assets/momeal_logo.png';
 
 const SECTION_TITLE_MENU = '메뉴 모두모아';
 const SECTION_TITLE_BRAND = '브랜드 모두모아';
@@ -52,9 +50,13 @@ int _getNavIndex<T>() {
   }
 }
 
-class HomePage extends GetView<HomeController> {
+class HomePage extends StatelessWidget {
   final void Function(int index) _navigateToIndex;
   final _analytics = AnalyticsService.to();
+
+  final _categoryController = CategoryController.to();
+  final _brandController = BrandController.to();
+
   HomePage(this._navigateToIndex);
 
   VoidCallback _iconHandlerFactory<T extends Displayable>(
@@ -82,10 +84,10 @@ class HomePage extends GetView<HomeController> {
   }
 
   List<HomeIcon> get categoryIcons =>
-      _iconFactory<Category, CategoryController>(controller.categories);
+      _iconFactory<Category, CategoryController>(_categoryController.homeItems);
 
   List<HomeIcon> get brandIcons =>
-      _iconFactory<Brand, BrandController>(controller.brands);
+      _iconFactory<Brand, BrandController>(_brandController.homeItems);
 
   @override
   Widget build(BuildContext context) {
@@ -99,11 +101,11 @@ class HomePage extends GetView<HomeController> {
               bottom: 20,
             ),
             child: Image.asset(
-              LOGO_PATH,
+              AssetImages.bi,
               height: 35,
             ),
           ),
-          HomeNotice(),
+          HomeNotice(_brandController.items.length),
           Row(
             children: [
               SectionTitle(SECTION_TITLE_MENU),

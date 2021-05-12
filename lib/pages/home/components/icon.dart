@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:momeal_app/constants.dart';
 
 const double ICON_SIZE = 50;
 
@@ -14,7 +15,7 @@ class HomeIcon extends StatelessWidget {
       HomeIcon(name, CachedNetworkImageProvider(thumbnail), onTap);
 
   static HomeIcon more(void Function() onTap) =>
-      HomeIcon('더보기', AssetImage('assets/more.png'), onTap);
+      HomeIcon('더보기', AssetImage(AssetImages.more), onTap);
 
   @override
   Widget build(BuildContext context) {

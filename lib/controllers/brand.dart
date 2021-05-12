@@ -7,4 +7,6 @@ class BrandController extends BaseController<Brand, BrandRepo> {
   static BrandController to() => Get.find();
 
   BrandController(BrandRepo repo) : super(repo);
+
+  get homeItems => items.take(3).toList();
 }
