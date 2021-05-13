@@ -13,6 +13,8 @@ class BrandRepo extends GraphQLRepo<Brand, GBrandsData_brands> {
 
   @override
   Brand parseData(GBrandsData_brands data) => Brand(
+      ID: data.ID,
+      isOnMain: data.onmain,
       name: data.name.toString(),
       thumbnail: data.brandimageurl == ""
           ? "https://mealkit.s3.ap-northeast-2.amazonaws.com/brands/momil.png"

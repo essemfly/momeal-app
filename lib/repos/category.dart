@@ -13,7 +13,8 @@ class CategoryRepo extends GraphQLRepo<Category, GCategoriesData_categories> {
 
   @override
   Category parseData(GCategoriesData_categories data) => Category(
-      name: data.name.toString(),
+      isOnMain: data.onmain,
+      name: data.name,
       label: data.label,
       thumbnail: data.categoryimageurl != ""
           ? data.categoryimageurl

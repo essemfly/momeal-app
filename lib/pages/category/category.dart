@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:momeal_app/controllers/category.dart';
+import 'package:momeal_app/graphql/schema.schema.gql.dart';
 import 'package:momeal_app/models/category.dart';
 import 'package:momeal_app/pages/common/all_list.dart';
 import 'package:momeal_app/pages/common/all_page.dart';
@@ -22,7 +23,11 @@ class CategoryPage extends StatelessWidget {
               title: controller.selected?.displayName ?? "",
               onBackTap: controller.unselect,
               category: controller.selected ??
-                  Category(name: "", thumbnail: "", label: ""),
+                  Category(
+                      isOnMain: false,
+                      name: GCategoryEnum.Altang,
+                      thumbnail: "",
+                      label: ""),
             ),
           ],
           index: controller.isSelected ? 1 : 0,

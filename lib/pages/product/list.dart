@@ -93,7 +93,7 @@ class ProductListPage extends StatelessWidget {
       required this.onBackTap,
       Category? category,
       Brand? brand}) {
-    _products.bindStream(_repo.listAll());
+    _products.bindStream(_repo.listAll(category: category, brand: brand));
   }
 
   @override

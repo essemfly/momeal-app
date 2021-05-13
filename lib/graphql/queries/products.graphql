@@ -4,9 +4,18 @@ query Products($filter: ProductsInput!) {
     name
     imageurl
     price
-    brand {
+    producturl
+    category {
+      onmain
       name
+      label
+      categoryimageurl
     }
-    mallproducturl
+    brand {
+      onmain
+      ID
+      name
+      brandimageurl
+    }
   }
 }

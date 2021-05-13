@@ -8,5 +8,5 @@ class CategoryController extends BaseController<Category, CategoryRepo> {
 
   CategoryController(CategoryRepo repo) : super(repo);
 
-  get homeItems => items.take(15).toList();
+  get homeItems => items.where((element) => element.isOnMain).toList();
 }

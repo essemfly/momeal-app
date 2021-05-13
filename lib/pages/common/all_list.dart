@@ -74,7 +74,7 @@ class AllList<T extends Displayable> extends StatelessWidget {
   AllList(this.items);
 
   static make<R extends Displayable>(List<R> items) {
-    BaseController controller = getController<R>();
+    final BaseController controller = getController<R>();
     final AnalyticsService _analytics = AnalyticsService.to();
 
     return AllList(items

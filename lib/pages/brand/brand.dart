@@ -21,7 +21,8 @@ class BrandPage extends StatelessWidget {
             ProductListPage(
               title: controller.selected?.displayName ?? "",
               onBackTap: controller.unselect,
-              brand: controller.selected ?? Brand(name: "", thumbnail: ""),
+              brand: controller.selected ??
+                  Brand(ID: "", isOnMain: false, name: "", thumbnail: ""),
             ),
           ],
           index: controller.isSelected ? 1 : 0,

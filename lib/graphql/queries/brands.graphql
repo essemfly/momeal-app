@@ -1,5 +1,7 @@
 query Brands {
   brands {
+    ID
+    onmain
     name
     brandimageurl
   }

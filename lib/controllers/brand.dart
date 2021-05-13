@@ -8,5 +8,5 @@ class BrandController extends BaseController<Brand, BrandRepo> {
 
   BrandController(BrandRepo repo) : super(repo);
 
-  get homeItems => items.take(3).toList();
+  get homeItems => items.where((element) => element.isOnMain).toList();
 }

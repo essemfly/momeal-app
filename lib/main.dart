@@ -50,8 +50,6 @@ class App extends StatelessWidget {
 class AppHome extends StatelessWidget {
   final RxInt _navIndex = 0.obs;
   int get navIndex => _navIndex.value;
-  final RxBool _isReady = false.obs;
-  bool get isReady => _isReady.value;
   final Rx<DateTime?> _lastExitAttemptAt = Rx<DateTime?>(null);
   Duration get _exitAttemptInterval => _lastExitAttemptAt.value != null
       ? DateTime.now().difference(_lastExitAttemptAt.value!)
@@ -59,8 +57,21 @@ class AppHome extends StatelessWidget {
 
   final CategoryController _categoryController = CategoryController.to();
   final BrandController _brandController = BrandController.to();
+  final RxBool _isReady = false.obs;
+  bool get isReady => _isReady.value;
 
   final _fToast = FToast();
+
+  AppHome() {
+    final readyStream = _categoryController.itemsStream.combineLatest(
+        _brandController.itemsStream, (List<Category>? c, List<Brand>? b) {
+      if (c == null || b == null) return false;
+      return c.length > 0 && b.length > 0;
+    });
+    _isReady.value = _categoryController.items.length > 0 &&
+        _brandController.items.length > 0;
+    _isReady.bindStream(readyStream);
+  }
 
   _showToast(BuildContext context) {
     _fToast.init(context);
@@ -109,14 +120,6 @@ class AppHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final readyStream = _categoryController.itemsStream.combineLatest(
-        _brandController.itemsStream, (List<Category>? c, List<Brand>? b) {
-      if (c == null || b == null) return false;
-      return c.length > 0 && b.length > 0;
-    });
-
-    _isReady.bindStream(readyStream);
-
     List<Widget> _pages = [
       HomePage((int index) => _navIndex.value = index),
       CategoryPage(backToHome: () => _navIndex.value = 0),

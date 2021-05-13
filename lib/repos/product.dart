@@ -6,24 +6,39 @@ import 'package:momeal_app/models/product.dart';
 import 'package:momeal_app/repos/base.dart';
 
 class ProductRepo extends GraphQLRepo<Product, GProductsData_products> {
-  Stream<List<Product>> listAll() {
-    final req = GProductsReq(
-      (builder) => builder
+  Stream<List<Product>> listAll({Brand? brand, Category? category}) {
+    final req = GProductsReq((builder) {
+      builder
         ..vars.filter.offset = 0
-        ..vars.filter.limit = 30,
-    );
+        ..vars.filter.limit = 100;
+      if (brand != null) {
+        builder.vars.filter.brand = brand.ID;
+      } else if (category != null) {
+        builder.vars.filter.category = category.name;
+      }
+    });
     return client
         .request(req)
         .map((event) => event.data?.products.map(parseData).toList() ?? []);
   }
 
   @override
-  parseData(data) => Product(
-      id: data.ID,
-      name: data.name,
-      thumbnail: data.imageurl,
-      brand: Brand(name: data.brand?.name ?? "밀키트", thumbnail: ""),
-      category: Category(name: "", thumbnail: "", label: ""),
-      price: data.price.toDouble(),
-      url: data.mallproducturl);
+  parseData(data) {
+    return Product(
+        id: data.ID,
+        name: data.name,
+        thumbnail: data.imageurl,
+        brand: Brand(
+            ID: data.brand.ID,
+            isOnMain: data.brand.onmain,
+            name: data.brand.name,
+            thumbnail: data.brand.brandimageurl),
+        category: Category(
+            isOnMain: data.category.onmain,
+            label: data.category.label,
+            name: data.category.name,
+            thumbnail: data.category.categoryimageurl),
+        price: data.price.toDouble(),
+        url: data.producturl);
+  }
 }

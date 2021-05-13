@@ -3,7 +3,7 @@ type Brand {
   name: String!
   description: String!
   brandimageurl: String!
-  address: String
+  onmain: Boolean!
 }
 
 type Category {
@@ -11,6 +11,7 @@ type Category {
   label: String!
   name: CategoryEnum!
   categoryimageurl: String!
+  onmain: Boolean!
 }
 
 enum CategoryEnum {
@@ -38,6 +39,7 @@ enum CategoryEnum {
   Pasta
   Sundubuzzigye
   Kongbeasyzzigye
+  Bokumzzim
 }
 
 type Product {
@@ -45,10 +47,8 @@ type Product {
   name: String!
   imageurl: String!
   price: Int!
-  maker: String
-  brand: Brand
-  mallname: String!
-  mallproducturl: String!
+  brand: Brand!
+  producturl: String!
   deliveryfee: String!
   category: Category!
 }
@@ -57,7 +57,7 @@ input ProductsInput {
   offset: Int!
   limit: Int!
   category: CategoryEnum
-  brand: ID
+  brand: String
 }
 
 type Query {
