@@ -13,6 +13,7 @@ import 'package:momeal_app/repos/brand.dart';
 import 'package:momeal_app/repos/category.dart';
 import 'package:momeal_app/services/analytics.dart';
 import 'package:stream_transform/stream_transform.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'controllers/brand.dart';
 import 'controllers/category.dart';
@@ -30,27 +31,6 @@ void main() async {
   Get.put(CategoryController(CategoryRepo()));
   Get.put(BrandController(BrandRepo()));
   runApp(App());
-}
-
-Future<bool> _exitApp(BuildContext context) async {
-  return await showDialog<bool?>(
-        context: context,
-        builder: (b) => AlertDialog(
-          title: Text('앱 종료'),
-          content: Text('정말 종료하시겠어요...? :('),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('아니오'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: new Text('예'),
-            ),
-          ],
-        ),
-      ) ??
-      false;
 }
 
 class App extends StatelessWidget {
@@ -72,9 +52,36 @@ class AppHome extends StatelessWidget {
   int get navIndex => _navIndex.value;
   final RxBool _isReady = false.obs;
   bool get isReady => _isReady.value;
+  final Rx<DateTime?> _lastExitAttemptAt = Rx<DateTime?>(null);
+  Duration get _exitAttemptInterval => _lastExitAttemptAt.value != null
+      ? DateTime.now().difference(_lastExitAttemptAt.value!)
+      : const Duration(days: 1);
 
   final CategoryController _categoryController = CategoryController.to();
   final BrandController _brandController = BrandController.to();
+
+  final _fToast = FToast();
+
+  _showToast(BuildContext context) {
+    _fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100.0),
+        color: const Color(0xe60D243B),
+      ),
+      child: const Text(
+        "'뒤로' 버튼을 한 번 더 누르면 앱이 종료됩니다.",
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+
+    _fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
 
   Future<bool> _onWillPop(BuildContext context) async {
     switch (_navIndex.value) {
@@ -90,7 +97,13 @@ class AppHome extends StatelessWidget {
         return false;
       // Home & others
       default:
-        return await _exitApp(context);
+        if (_exitAttemptInterval <= const Duration(seconds: 2)) {
+          return true;
+        }
+
+        _lastExitAttemptAt.value = DateTime.now();
+        _showToast(context);
+        return false;
     }
   }
 
