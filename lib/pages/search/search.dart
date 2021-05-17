@@ -5,32 +5,10 @@ import 'package:momeal_app/pages/common/page_with_topnav.dart';
 import 'package:momeal_app/pages/product/list.dart';
 
 class _SearchBar extends StatelessWidget {
-  final _inputController = TextEditingController();
-  final focusNode;
   final SearchController controller;
-  final RxBool _canShowCancel = false.obs;
   static const _label = '검색어를 입력해 주세요.';
 
-  get canShowCancel => _canShowCancel.value || controller.hasSearched;
-
-  _SearchBar({required this.controller, required this.focusNode}) {
-    _inputController.text = controller.keyword.value;
-    focusNode.unfocus();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) _canShowCancel.value = true;
-    });
-  }
-
-  resetForm() {
-    focusNode.unfocus();
-    controller.resetSearch();
-    _inputController.text = "";
-  }
-
-  submitForm() {
-    focusNode.unfocus();
-    controller.search(_inputController.text);
-  }
+  _SearchBar(this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -38,24 +16,21 @@ class _SearchBar extends StatelessWidget {
       () => Padding(
         padding: const EdgeInsets.all(10),
         child: TextField(
-          focusNode: focusNode,
-          controller: _inputController,
+          focusNode: controller.focusNode,
+          controller: controller.inputController,
           textInputAction: TextInputAction.search,
-          onSubmitted: (value) {
-            submitForm();
-            _inputController.text = value;
-          },
+          onSubmitted: (value) => controller.search(),
           autofocus: false,
           autocorrect: false,
           decoration: InputDecoration(
             prefixIcon: IconButton(
               icon: Icon(Icons.search_outlined),
-              onPressed: submitForm,
+              onPressed: controller.search,
             ),
-            suffixIcon: canShowCancel
+            suffixIcon: controller.canShowCancel.value
                 ? IconButton(
                     icon: Icon(Icons.close_rounded),
-                    onPressed: () => resetForm(),
+                    onPressed: controller.reset,
                   )
                 : null,
             labelText: _label,
@@ -72,7 +47,6 @@ class _SearchBar extends StatelessWidget {
 class SearchPage extends StatelessWidget {
   final void Function() backToHome;
   final controller = SearchController.to();
-  final _focusNode = FocusNode();
   SearchPage({required this.backToHome});
 
   @override
@@ -80,25 +54,22 @@ class SearchPage extends StatelessWidget {
     return Obx(
       () => GestureDetector(
         onTap: () {
-          _focusNode.unfocus();
+          controller.focusNode.unfocus();
         },
         child: PageWithTopNav(
           title: "검색",
           child: Column(
             children: [
-              _SearchBar(
-                controller: controller,
-                focusNode: _focusNode,
-              ),
+              _SearchBar(controller),
               Expanded(
                 child: controller.hasSearched
                     ? ProductListPage(
                         title: "",
                         searchKeyword: controller.keyword.value,
-                        onBackTap: controller.resetSearch,
+                        onBackTap: controller.reset,
                         onlyList: true,
                       )
-                    : Container(),
+                    : Container(color: Colors.white),
               ),
             ],
           ),

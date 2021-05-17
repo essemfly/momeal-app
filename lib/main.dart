@@ -61,6 +61,7 @@ class AppHome extends StatelessWidget {
 
   final CategoryController _categoryController = CategoryController.to();
   final BrandController _brandController = BrandController.to();
+  final SearchController _searchController = SearchController.to();
   final RxBool _isReady = false.obs;
   bool get isReady => _isReady.value;
 
@@ -110,7 +111,10 @@ class AppHome extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> _pages = [
       HomePage((int index) => _navIndex.value = index),
-      SearchPage(backToHome: _backToHome),
+      SearchPage(backToHome: () {
+        _searchController.reset();
+        _backToHome();
+      }),
       CategoryPage(backToHome: _backToHome),
       BrandPage(backToHome: _backToHome)
     ];
@@ -135,6 +139,7 @@ class AppHome extends StatelessWidget {
                 onTap: (int newIndex) {
                   _categoryController.unselect();
                   _brandController.unselect();
+                  _searchController.reset();
                   _navIndex.value = newIndex;
                 },
                 items: [
