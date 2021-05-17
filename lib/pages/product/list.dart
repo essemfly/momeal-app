@@ -31,7 +31,7 @@ class ProductListItem extends StatelessWidget {
               "name": product.name,
               "url": product.url,
               "brandName": product.brand.name,
-              "category": product.category.name,
+              "category": product.category.name.toString(),
               "price": product.price,
             });
 
@@ -99,20 +99,25 @@ class ProductListPage extends StatelessWidget {
   final ProductRepo _repo = ProductRepo();
   final _analytics = AnalyticsService.to();
   static const _pageSize = 20;
+  final bool onlyList;
 
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 0);
 
-  ProductListPage(
-      {required this.title,
-      required this.onBackTap,
-      Category? category,
-      Brand? brand}) {
+  ProductListPage({
+    required this.title,
+    required this.onBackTap,
+    required this.onlyList,
+    Category? category,
+    Brand? brand,
+    String? searchKeyword,
+  }) {
     _pagingController.addPageRequestListener((pageKey) async {
       final newItems = await (_repo
           .listAll(
               category: category,
               brand: brand,
+              searchKeyword: searchKeyword,
               limit: _pageSize,
               offset: pageKey)
           .first);
@@ -127,29 +132,35 @@ class ProductListPage extends StatelessWidget {
     });
   }
 
+  _buildList(BuildContext context) {
+    return PagedGridView<int, Product>(
+      pagingController: _pagingController,
+      padding: const EdgeInsets.all(0),
+      builderDelegate: PagedChildBuilderDelegate(
+          noItemsFoundIndicatorBuilder: (ctx) => Center(
+                child: const Text("조건을 만족하는 상품이 없어요 😭"),
+              ),
+          itemBuilder: (ctx, item, index) => Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: ProductListItem(item, analytics: _analytics),
+              )),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: getAspectRatio(desiredHeight: 240, context: context),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PageWithTopNav(
-      title: title,
-      child: PagedGridView<int, Product>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate(
-            noItemsFoundIndicatorBuilder: (ctx) => Center(
-                  child: const Text("조건을 만족하는 상품이 없어요 😭"),
-                ),
-            itemBuilder: (ctx, item, index) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: ProductListItem(item, analytics: _analytics),
-                )),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio:
-              getAspectRatio(desiredHeight: 240, context: context),
-        ),
-      ),
-      onBackTap: onBackTap,
-      scrollable: false,
-    );
+    return onlyList
+        ? _buildList(context)
+        : PageWithTopNav(
+            title: title,
+            child: _buildList(context),
+            onBackTap: onBackTap,
+            scrollable: false,
+          );
   }
 }

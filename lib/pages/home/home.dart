@@ -44,9 +44,9 @@ ClickableButtonType _getIconTypeEnum<T>(bool isMore) {
 
 int _getNavIndex<T>() {
   if (T == Brand) {
-    return 2;
+    return 3;
   } else {
-    return 1;
+    return 2;
   }
 }
 

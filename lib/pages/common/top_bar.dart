@@ -10,13 +10,10 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [
+      Container(width: double.infinity, height: 60, color: Colors.white),
       Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(title,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ),
+        child: Text(title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
     ];
 

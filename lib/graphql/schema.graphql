@@ -51,6 +51,8 @@ type Product {
   producturl: String!
   deliveryfee: String!
   category: Category!
+  purchasecount: Int!
+  mallname: String!
 }
 
 input ProductsInput {
@@ -58,6 +60,7 @@ input ProductsInput {
   limit: Int!
   category: CategoryEnum
   brand: String
+  search: String
 }
 
 type Query {

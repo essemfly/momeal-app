@@ -70,12 +70,19 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: SpoqaHanSansNeo
+      fonts:
+        - asset: fonts/SpoqaHanSansNeo-Thin.otf
+          weight: 100
+        - asset: fonts/SpoqaHanSansNeo-Light.otf
+          weight: 300
+        - asset: fonts/SpoqaHanSansNeo-Regular.otf
+          weight: 400
+        - asset: fonts/SpoqaHanSansNeo-Medium.otf
+          weight: 500
+        - asset: fonts/SpoqaHanSansNeo-Bold.otf
+          weight: 700
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

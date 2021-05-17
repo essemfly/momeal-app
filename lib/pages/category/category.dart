@@ -24,6 +24,7 @@ class CategoryPage extends StatelessWidget {
                     title: controller.selected!.displayName,
                     onBackTap: controller.unselect,
                     category: controller.selected!,
+                    onlyList: false,
                   )
                 : Container(),
           ],

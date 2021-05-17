@@ -7,7 +7,11 @@ import 'package:momeal_app/repos/base.dart';
 
 class ProductRepo extends GraphQLRepo<Product, GProductsData_products> {
   Stream<List<Product>> listAll(
-      {Brand? brand, Category? category, int? offset, int? limit}) {
+      {Brand? brand,
+      Category? category,
+      int? offset,
+      int? limit,
+      String? searchKeyword}) {
     final req = GProductsReq((builder) {
       builder
         ..vars.filter.offset = offset ?? 0
@@ -17,6 +21,7 @@ class ProductRepo extends GraphQLRepo<Product, GProductsData_products> {
       } else if (category != null) {
         builder.vars.filter.category = category.name;
       }
+      builder.vars.filter.search = searchKeyword ?? "";
     });
     return client
         .request(req)

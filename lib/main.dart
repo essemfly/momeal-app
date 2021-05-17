@@ -3,12 +3,14 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
+import 'package:momeal_app/controllers/search.dart';
 import 'package:momeal_app/pages/brand/brand.dart';
 import 'package:momeal_app/pages/home/home.dart';
 import 'package:momeal_app/pages/loading/loading.dart';
 import 'package:momeal_app/pages/category/category.dart';
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry/ferry.dart';
+import 'package:momeal_app/pages/search/search.dart';
 import 'package:momeal_app/repos/brand.dart';
 import 'package:momeal_app/repos/category.dart';
 import 'package:momeal_app/services/analytics.dart';
@@ -23,13 +25,14 @@ import 'models/category.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final graphqlLink = HttpLink('https://dev.mealkit.lessbutter.co/query');
+  final graphqlLink = HttpLink('https://mealkit.lessbutter.co/query');
   Get.put(Client(link: graphqlLink));
 
   Get.put(AnalyticsService());
 
   Get.put(CategoryController(CategoryRepo()));
   Get.put(BrandController(BrandRepo()));
+  Get.put(SearchController());
   runApp(App());
 }
 
@@ -41,6 +44,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'SpoqaHanSansNeo',
       ),
       home: AppHome(),
     );
@@ -100,12 +104,15 @@ class AppHome extends StatelessWidget {
     }
   }
 
+  _backToHome() => _navIndex.value = 0;
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = [
       HomePage((int index) => _navIndex.value = index),
-      CategoryPage(backToHome: () => _navIndex.value = 0),
-      BrandPage(backToHome: () => _navIndex.value = 0)
+      SearchPage(backToHome: _backToHome),
+      CategoryPage(backToHome: _backToHome),
+      BrandPage(backToHome: _backToHome)
     ];
 
     return WillPopScope(
@@ -120,6 +127,8 @@ class AppHome extends StatelessWidget {
               ),
               bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Colors.black,
+                showUnselectedLabels: true,
+                type: BottomNavigationBarType.fixed,
                 unselectedItemColor: Colors.grey.shade500,
                 iconSize: 28,
                 currentIndex: navIndex,
@@ -131,6 +140,8 @@ class AppHome extends StatelessWidget {
                 items: [
                   const BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined), label: '홈'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.search_outlined), label: '검색'),
                   const BottomNavigationBarItem(
                       icon: Icon(Icons.menu), label: '메뉴'),
                   const BottomNavigationBarItem(
