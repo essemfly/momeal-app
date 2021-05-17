@@ -19,16 +19,13 @@ class CategoryPage extends StatelessWidget {
           children: [
             AllPage('모든 밀키트 메뉴', AllList.make<Category>(controller.items),
                 backToHome),
-            ProductListPage(
-              title: controller.selected?.displayName ?? "",
-              onBackTap: controller.unselect,
-              category: controller.selected ??
-                  Category(
-                      isOnMain: false,
-                      name: GCategoryEnum.Altang,
-                      thumbnail: "",
-                      label: ""),
-            ),
+            controller.isSelected
+                ? ProductListPage(
+                    title: controller.selected!.displayName,
+                    onBackTap: controller.unselect,
+                    category: controller.selected!,
+                  )
+                : Container(),
           ],
           index: controller.isSelected ? 1 : 0,
         ));

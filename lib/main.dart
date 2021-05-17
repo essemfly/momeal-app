@@ -17,13 +17,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'controllers/brand.dart';
 import 'controllers/category.dart';
+import 'helpers/toast.dart';
 import 'models/brand.dart';
 import 'models/category.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final graphqlLink = HttpLink(
-      'http://ec2-15-164-166-129.ap-northeast-2.compute.amazonaws.com:8080/query');
+  final graphqlLink = HttpLink('https://dev.mealkit.lessbutter.co/query');
   Get.put(Client(link: graphqlLink));
 
   Get.put(AnalyticsService());
@@ -73,27 +73,6 @@ class AppHome extends StatelessWidget {
     _isReady.bindStream(readyStream);
   }
 
-  _showToast(BuildContext context) {
-    _fToast.init(context);
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100.0),
-        color: const Color(0xe60D243B),
-      ),
-      child: const Text(
-        "'뒤로' 버튼을 한 번 더 누르면 앱이 종료됩니다.",
-        style: const TextStyle(color: Colors.white),
-      ),
-    );
-
-    _fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
-    );
-  }
-
   Future<bool> _onWillPop(BuildContext context) async {
     switch (_navIndex.value) {
       // Category
@@ -113,7 +92,10 @@ class AppHome extends StatelessWidget {
         }
 
         _lastExitAttemptAt.value = DateTime.now();
-        _showToast(context);
+        showToast(
+            fToast: _fToast,
+            context: context,
+            body: "'뒤로' 버튼을 한 번 더 누르면 앱이 종료됩니다.");
         return false;
     }
   }

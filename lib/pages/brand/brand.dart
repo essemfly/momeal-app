@@ -18,12 +18,12 @@ class BrandPage extends StatelessWidget {
           children: [
             AllPage('모든 밀키트 브랜드', AllList.make<Brand>(controller.items),
                 backToHome),
-            ProductListPage(
-              title: controller.selected?.displayName ?? "",
-              onBackTap: controller.unselect,
-              brand: controller.selected ??
-                  Brand(ID: "", isOnMain: false, name: "", thumbnail: ""),
-            ),
+            controller.isSelected
+                ? ProductListPage(
+                    title: controller.selected!.displayName,
+                    onBackTap: controller.unselect,
+                    brand: controller.selected!)
+                : Container(),
           ],
           index: controller.isSelected ? 1 : 0,
         ));

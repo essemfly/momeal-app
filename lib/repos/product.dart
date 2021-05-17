@@ -6,11 +6,12 @@ import 'package:momeal_app/models/product.dart';
 import 'package:momeal_app/repos/base.dart';
 
 class ProductRepo extends GraphQLRepo<Product, GProductsData_products> {
-  Stream<List<Product>> listAll({Brand? brand, Category? category}) {
+  Stream<List<Product>> listAll(
+      {Brand? brand, Category? category, int? offset, int? limit}) {
     final req = GProductsReq((builder) {
       builder
-        ..vars.filter.offset = 0
-        ..vars.filter.limit = 100;
+        ..vars.filter.offset = offset ?? 0
+        ..vars.filter.limit = limit ?? 100;
       if (brand != null) {
         builder.vars.filter.brand = brand.ID;
       } else if (category != null) {

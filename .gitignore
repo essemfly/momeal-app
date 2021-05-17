@@ -47,3 +47,5 @@ app.*.map.json
 
 *.gql.dart
 *.gql.g.dart
+
+/android/key.properties
