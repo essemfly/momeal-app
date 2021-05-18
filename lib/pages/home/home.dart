@@ -91,50 +91,56 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            margin: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 20,
-              bottom: 25,
-            ),
-            child: Image.asset(
-              AssetImages.bi,
-              height: 35,
-            ),
-          ),
-          HomeNotice(_brandController.items.length),
-          Row(
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SectionTitle(SECTION_TITLE_MENU),
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 20,
+                  bottom: 25,
+                ),
+                child: Image.asset(
+                  AssetImages.bi,
+                  height: 35,
+                ),
+              ),
+              HomeNotice(_brandController.items.length),
+              Row(
+                children: [
+                  SectionTitle(SECTION_TITLE_MENU),
+                ],
+              ),
+              Obx(() => GridView.count(
+                    padding: const EdgeInsets.all(0),
+                    shrinkWrap: true, // Why?
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    children: categoryIcons,
+                  )),
+              Container(
+                height: 20,
+                decoration: BoxDecoration(color: const Color(0xffF5F7FF)),
+              ),
+              Row(
+                children: [
+                  SectionTitle(SECTION_TITLE_BRAND),
+                ],
+              ),
+              Obx(() => GridView.count(
+                    padding: const EdgeInsets.all(0),
+                    shrinkWrap: true, // Why?
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    children: brandIcons,
+                  )),
             ],
           ),
-          Obx(() => GridView.count(
-                padding: const EdgeInsets.all(0),
-                shrinkWrap: true, // Why?
-                physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 4,
-                children: categoryIcons,
-              )),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(color: const Color(0xffF5F7FF)),
-          ),
-          Row(
-            children: [
-              SectionTitle(SECTION_TITLE_BRAND),
-            ],
-          ),
-          Obx(() => GridView.count(
-                padding: const EdgeInsets.all(0),
-                shrinkWrap: true, // Why?
-                physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 4,
-                children: brandIcons,
-              )),
-        ],
+        ),
       ),
     );
   }

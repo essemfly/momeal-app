@@ -143,21 +143,28 @@ class ProductListPage extends StatelessWidget {
   }
 
   _buildList(BuildContext context) {
-    return PagedGridView<int, Product>(
-      pagingController: _pagingController,
-      padding: const EdgeInsets.all(0),
-      builderDelegate: PagedChildBuilderDelegate(
-          noItemsFoundIndicatorBuilder: (ctx) => Center(
-                child: const Text("조건을 만족하는 상품이 없어요 😭"),
-              ),
-          itemBuilder: (ctx, item, index) => Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: ProductListItem(item, analytics: _analytics),
-              )),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: getAspectRatio(desiredHeight: 240, context: context),
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: Scrollbar(
+        child: PagedGridView<int, Product>(
+          pagingController: _pagingController,
+          padding: const EdgeInsets.all(0),
+          builderDelegate: PagedChildBuilderDelegate(
+              noItemsFoundIndicatorBuilder: (ctx) => Center(
+                    child: const Text("조건을 만족하는 상품이 없어요 😭"),
+                  ),
+              itemBuilder: (ctx, item, index) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: ProductListItem(item, analytics: _analytics),
+                  )),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio:
+                getAspectRatio(desiredHeight: 240, context: context),
+          ),
+        ),
       ),
     );
   }

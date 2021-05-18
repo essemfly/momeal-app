@@ -18,18 +18,21 @@ class SearchController {
       if (focusNode.hasFocus)
         canShowCancel.value = true;
       else
+        // Focusing out
         canShowCancel.value = inputController.text != "";
     });
     inputController.addListener(() {
-      canShowCancel.value = inputController.text != "";
+      if (focusNode.hasFocus)
+        canShowCancel.value = true;
+      else
+        canShowCancel.value = inputController.text != "";
     });
   }
 
   reset() {
-    focusNode.unfocus();
-    canShowCancel.value = false;
     _hasSearched.value = false;
     inputController.text = "";
+    focusNode.unfocus();
   }
 
   search() async {
