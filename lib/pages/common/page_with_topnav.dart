@@ -25,6 +25,7 @@ class PageWithTopNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tempScrollController = ScrollController();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -33,7 +34,18 @@ class PageWithTopNav extends StatelessWidget {
           onBackTap: hideBackButton ? null : onBackTap,
         ),
         Expanded(
-            child: scrollable ? SingleChildScrollView(child: child) : child),
+            child: scrollable
+                ? MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Scrollbar(
+                        controller: tempScrollController,
+                        child: SingleChildScrollView(
+                          child: child,
+                          controller: tempScrollController,
+                        )),
+                  )
+                : child),
       ],
     );
   }

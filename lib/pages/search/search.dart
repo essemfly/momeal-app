@@ -74,6 +74,7 @@ class SearchPage extends StatelessWidget {
             ],
           ),
           onBackTap: backToHome,
+          // Below parameter implements custom scrollable view (searchbar does not scroll)
           scrollable: false,
           hideBackButton: true,
         ),
