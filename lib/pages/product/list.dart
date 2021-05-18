@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:momeal_app/constants.dart';
@@ -101,6 +102,8 @@ class ProductListPage extends StatelessWidget {
   static const _pageSize = 20;
   final bool onlyList;
 
+  final RxInt _lastPageKey = (-1).obs;
+
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 0);
 
@@ -113,6 +116,13 @@ class ProductListPage extends StatelessWidget {
     String? searchKeyword,
   }) {
     _pagingController.addPageRequestListener((pageKey) async {
+      if (_lastPageKey.value == pageKey) return;
+      // This MUST be here to prevent double-calling.
+      // If put below listAll(), Rx object will not be updated
+      // until the second call, preventing the above if block
+      // from exiting the function correctly.
+      _lastPageKey.value = pageKey;
+
       final newItems = await (_repo
           .listAll(
               category: category,
@@ -154,6 +164,10 @@ class ProductListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // To prevent listener not firing
+    if (_lastPageKey.value == -1) {
+      _pagingController.notifyPageRequestListeners(0);
+    }
     return onlyList
         ? _buildList(context)
         : PageWithTopNav(
